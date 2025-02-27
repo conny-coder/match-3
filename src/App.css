@@ -1,0 +1,58 @@
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
+  gap: 5px;
+  margin: 20px auto;
+  width: max-content;
+  padding: 10px;
+  background-color: #1b1b1b;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tile.empty {
+  background: transparent;
+}
+
+.tile.active {
+  transform: scale(0.9) !important;
+}
+
+.tile.red {
+  background-color: #e63946;
+}
+.tile.blue {
+  background-color: #457b9d;
+}
+.tile.green {
+  background-color: #2a9d8f;
+}
+.tile.yellow {
+  background-color: #e9c46a;
+}
+.tile.purple {
+  background-color: #9b5de5;
+}
+
+.tile.removed {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
