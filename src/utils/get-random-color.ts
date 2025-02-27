@@ -1,4 +1,6 @@
 export const COLORS = ["red", "blue", "green", "yellow", "purple"];
 
-export const getRandomColor = () =>
-  COLORS[Math.floor(Math.random() * COLORS.length)];
+export const getRandomTile = () => ({
+  color: COLORS[Math.floor(Math.random() * COLORS.length)],
+  id: Math.random(),
+});

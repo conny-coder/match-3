@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { checkMatches } from "../utils/check-matches";
 import { BOARD_SIZE, createBoard } from "../utils/create-board";
-import { getRandomColor } from "../utils/get-random-color";
+import { getRandomTile } from "../utils/get-random-color";
 import Tile from "./Tile";
 
+export interface ITile {
+  color: string | null;
+  id: number;
+}
+
 const GameBoard = () => {
-  const [board, setBoard] = useState<(string | null)[][]>(createBoard);
+  const [board, setBoard] = useState<ITile[][]>(createBoard);
   const [selected, setSelected] = useState<[number, number] | null>(null);
 
   const swapTiles = (pos1: [number, number], pos2: [number, number]) => {
@@ -45,7 +50,7 @@ const GameBoard = () => {
       if (matches.length === 0) return;
 
       let newBoard = board.map((row) => [...row]);
-      matches.forEach(([row, col]) => (newBoard[row][col] = null));
+      matches.forEach(([row, col]) => (newBoard[row][col].color = null));
 
       setBoard([...newBoard]);
 
@@ -55,15 +60,15 @@ const GameBoard = () => {
         for (let col = 0; col < BOARD_SIZE; col++) {
           let emptySpaces = 0;
           for (let row = BOARD_SIZE - 1; row >= 0; row--) {
-            if (filledBoard[row][col] === null) {
+            if (filledBoard[row][col].color === null) {
               emptySpaces++;
             } else if (emptySpaces > 0) {
               filledBoard[row + emptySpaces][col] = filledBoard[row][col];
-              filledBoard[row][col] = null;
+              filledBoard[row][col].color = null;
             }
           }
           for (let i = 0; i < emptySpaces; i++) {
-            filledBoard[i][col] = getRandomColor();
+            filledBoard[i][col] = getRandomTile();
           }
         }
 
@@ -77,13 +82,13 @@ const GameBoard = () => {
   return (
     <div className="game-board">
       {board.map((row, rowIndex) =>
-        row.map((color, colIndex) => (
+        row.map((tile, colIndex) => (
           <Tile
             isActive={
               !!selected && selected[0] === rowIndex && selected[1] === colIndex
             }
-            key={`${rowIndex}-${colIndex}`}
-            color={color}
+            key={tile.id}
+            color={tile.color}
             onClick={() => handleClick(rowIndex, colIndex)}
           />
         ))
