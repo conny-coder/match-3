@@ -1,6 +1,6 @@
 import { ITile } from "../components/GameBoard";
 import { checkMatches } from "./check-matches";
-import { getRandomTile } from "./get-random-color";
+import { getRandomTile } from "./get-random-tile";
 
 export const BOARD_SIZE = 8;
 

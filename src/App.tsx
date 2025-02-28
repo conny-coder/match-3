@@ -4,7 +4,7 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <h1>Match-3 Game</h1>
+      <h1 style={{ textAlign: "center" }}>Match-3 Game</h1>
       <GameBoard />
     </div>
   );

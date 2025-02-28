@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { checkMatches } from "../utils/check-matches";
 import { BOARD_SIZE, createBoard } from "../utils/create-board";
-import { getRandomTile } from "../utils/get-random-color";
+import { getRandomTile } from "../utils/get-random-tile";
 import Tile from "./Tile";
 
 export interface ITile {
@@ -11,6 +11,7 @@ export interface ITile {
 
 const GameBoard = () => {
   const [board, setBoard] = useState<ITile[][]>(createBoard);
+  // Currently selected tile for swapping.
   const [selected, setSelected] = useState<[number, number] | null>(null);
 
   const swapTiles = (pos1: [number, number], pos2: [number, number]) => {
@@ -28,14 +29,16 @@ const GameBoard = () => {
     } else {
       const [sRow, sCol] = selected;
       if (
-        (Math.abs(sRow - row) === 1 && sCol === col) ||
-        (Math.abs(sCol - col) === 1 && sRow === row)
+        (Math.abs(sRow - row) === 1 && sCol === col) || // Vertical swap
+        (Math.abs(sCol - col) === 1 && sRow === row) // Horizontal swap
       ) {
         const newBoard = swapTiles([sRow, sCol], [row, col]);
         const prevBoard = board;
 
+        // Update the board state
         setBoard(newBoard);
 
+        // If the swap doesn't result in a match, revert the swap
         if (checkMatches(newBoard).length <= 0) {
           setTimeout(() => setBoard(prevBoard), 500);
         }
@@ -44,16 +47,19 @@ const GameBoard = () => {
     }
   };
 
+  // Effect that checks changing in the board and update the board if it has matches
   useEffect(() => {
     const handleMatches = () => {
       let matches = checkMatches(board);
       if (matches.length === 0) return;
 
       let newBoard = board.map((row) => [...row]);
+      // Remove matched tiles by setting their color to null
       matches.forEach(([row, col]) => (newBoard[row][col].color = null));
 
+      // Update the board with empty tiles
       setBoard([...newBoard]);
-
+      // Iterate through each column to shift down tiles and fill empty spaces
       setTimeout(() => {
         let filledBoard = newBoard.map((row) => [...row]);
 
@@ -63,15 +69,19 @@ const GameBoard = () => {
             if (filledBoard[row][col].color === null) {
               emptySpaces++;
             } else if (emptySpaces > 0) {
-              filledBoard[row + emptySpaces][col] = filledBoard[row][col];
+              // Move the tile down by the number of empty spaces
+              filledBoard[row + emptySpaces][col] = {
+                ...filledBoard[row][col],
+              };
               filledBoard[row][col].color = null;
             }
           }
+          // Generate new tiles at the top to fill the empty spaces
           for (let i = 0; i < emptySpaces; i++) {
             filledBoard[i][col] = getRandomTile();
           }
         }
-
+        // Update the board with new tiles
         setBoard([...filledBoard]);
       }, 300);
     };
