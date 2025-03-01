@@ -16,10 +16,15 @@ export interface ITile {
 }
 
 const GameBoard = () => {
+  const [isFirstRender, setIsFirstRender] = useState(true);
   const { setScore } = useContext(GameContext);
   const [board, setBoard] = useState<ITile[][]>(createBoard);
   // Currently selected tile for swapping
   const [selected, setSelected] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
 
   const swapTiles = (
     pos1: [number, number],
@@ -136,7 +141,10 @@ const GameBoard = () => {
             y={tile.y}
             key={tile.id}
             color={tile.color}
+            col={colIndex}
+            row={rowIndex}
             onClick={() => handleClick(rowIndex, colIndex)}
+            isFirstRender={isFirstRender}
           />
         ))
       )}
