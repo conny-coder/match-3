@@ -87,7 +87,7 @@ const GameBoard = () => {
     const handleMatches = () => {
       let matches = checkMatches(board);
       if (matches.length === 0) return;
-      console.log(matches);
+
       let newBoard = board.map((row) => [...row]);
       // Remove matched tiles by setting their color to null
       matches.forEach(([row, col]) => (newBoard[row][col].color = null));
@@ -107,7 +107,7 @@ const GameBoard = () => {
               // Move the tile down by the number of empty spaces
               filledBoard[row + emptySpaces][col] = {
                 ...filledBoard[row][col],
-                initialY: -50,
+                initialY: -55 * emptySpaces,
                 initialX: 0,
               };
               filledBoard[row][col].color = null;
@@ -116,6 +116,7 @@ const GameBoard = () => {
           // Generate new tiles at the top to fill the empty spaces
           for (let i = 0; i < emptySpaces; i++) {
             filledBoard[i][col] = getRandomTile();
+            filledBoard[i][col].initialY = -55 * (i + 1);
           }
           setScore(emptySpaces * 10);
         }
